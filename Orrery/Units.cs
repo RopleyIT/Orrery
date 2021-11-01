@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Orrery
 {
@@ -13,10 +9,12 @@ namespace Orrery
         public const int ArcSecondsPerDegree = 3600;
         public const int ArcMinutesPerDegree = 60;
         public const long MetresPerAU = 149597870700L;
-        public static readonly DateTimeOffset Jan1st1970
-            = new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero);
-        public const double JulianDateOfJan1st1970 = 2440587.5;
+        //public static readonly DateTimeOffset Jan1st1970
+        //    = new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero);
+        //public const double JulianDateOfJan1st1970 = 2440587.5;
         public const double JulianDate2000 = 2451545.0;
+        public static readonly DateTimeOffset Date2000
+            = new (2000, 1, 1, 12, 0, 0, TimeSpan.Zero);
 
         /// <summary>
         /// Conversion of a DateTime into Julian Date.
@@ -28,24 +26,24 @@ namespace Orrery
         /// <param name="t">A .NET date and time expressed as a DateTimeOffset</param>
         /// <returns>The equivalent Julian date</returns>
 
-        public static double JulianDate(DateTimeOffset t) 
-            => JulianDateOfJan1st1970 + (t - Jan1st1970).TotalDays;
+        public static double JulianDate(DateTimeOffset t)
+            => JulianDate2000 + (t - Date2000).TotalDays;
 
         /// <summary>
         /// COnvert a Julian date into its equivalent .NET time
         /// </summary>
         /// <param name="jd">The Julian date to convert</param>
         /// <returns>The equivalent .NET time</returns>
-        
-        public static DateTimeOffset AsDateTime(double jd) 
-            => Jan1st1970.AddDays(jd - JulianDateOfJan1st1970);
+
+        public static DateTimeOffset AsDateTime(double jd)
+            => Date2000.AddDays(jd - JulianDate2000);
 
         /// <summary>
         /// Express a Julian date as a printable string
         /// </summary>
         /// <param name="jd">The Julian date to render</param>
         /// <returns>The Julian date in string form</returns>
-        
+
         public static string JulianDateAsString(double jd)
         {
             return $"JD {jd} = {AsDateTime(jd):G}";
@@ -56,7 +54,7 @@ namespace Orrery
         /// </summary>
         /// <param name="v">Angle in degrees</param>
         /// <returns>Angle in radians</returns>
-        
+
         public static double DegToRad(double v)
             => v * Math.PI / 180;
 
@@ -65,7 +63,7 @@ namespace Orrery
         /// </summary>
         /// <param name="v">Angle in radians</param>
         /// <returns>Angle in degrees</returns>
-        
+
         public static double RadToDeg(double v)
             => v * 180 / Math.PI;
 
@@ -74,8 +72,8 @@ namespace Orrery
         /// for the firmament to rotate to same
         /// longitude in the sky.
         /// </summary>
-        
-        public readonly static TimeSpan SiderealDay 
-            = new TimeSpan(0, 23, 56, 4, 100);
+
+        public readonly static TimeSpan SiderealDay
+            = new (0, 23, 56, 4, 100);
     }
 }

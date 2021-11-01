@@ -6,7 +6,7 @@ namespace OrreryPlotter
 {
     public class SkyChart
     {
-        SVGCreator svg = new SVGCreator();
+        readonly SVGCreator svg = new ();
 
         public PointF LongLat { get; set; }
         public List<string> BodyNames { get; init; } = new();
@@ -20,15 +20,15 @@ namespace OrreryPlotter
 
             svg.AddLine(new PointF(-900, 0), new PointF(900, 0), "gray", 2);
             svg.AddLine(new PointF(0, -450), new PointF(0, 450), "gray", 2);
-            for(int i = -450; i < 450; i += 50)
+            for (int i = -450; i < 450; i += 50)
             {
-                if (i == 0) 
+                if (i == 0)
                     continue;
                 var element = svg.AddLine(new PointF(-900, i), new PointF(900, i), "gray", 1);
                 element.SetDashes(5, 10);
-                svg.AddText($"{-i / 5}°", new PointF(10, i+10));
+                svg.AddText($"{-i / 5}°", new PointF(10, i + 10));
             }
-            for(int j = -900; j <= 900; j += 75)
+            for (int j = -900; j <= 900; j += 75)
             {
                 if (j == 0)
                     continue;
@@ -46,7 +46,7 @@ namespace OrreryPlotter
             svg.AddText("NW", new PointF(-220, 25));
 
             for (int i = 0; i < BodyNames.Count; i++)
-                PlotKey(i, BodyNames[i], new PointF(-900 + 175 * i, 425));
+                PlotKey(i, BodyNames[i], new PointF(-900 + 175 * (i%10), 425 - (i/10)*50));
 
             // Now plot each planet's position
 
@@ -76,7 +76,7 @@ namespace OrreryPlotter
             return 0;
         }
 
-        private string[] bodyColours = new string[]
+        private readonly string[] bodyColours = new string[]
         {
             "gold",
             "darkgreen",
@@ -100,11 +100,11 @@ namespace OrreryPlotter
         void PlotKey(int itemNumber, string text, PointF location)
         {
             svg.AddCircle(location, 10, "black", 1, bodyColours[itemNumber]);
-            svg.AddText(text, new PointF(location.X + 25, location.Y+10));
+            svg.AddText(text, new PointF(location.X + 25, location.Y + 10));
         }
         void PlotBody(SVGCreator svg, BodyLocation loc, int colour)
         {
-            PointF centre = new PointF((float)loc.Azimuth * 5, (float)loc.Elevation * -5);
+            PointF centre = new ((float)loc.Azimuth * 5, (float)loc.Elevation * -5);
             svg.AddCircle(centre, 10, "black", 1, bodyColours[colour]);
         }
     }

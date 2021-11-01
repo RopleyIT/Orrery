@@ -1,16 +1,13 @@
-﻿using Orrery;
-using OrreryPlotter;
-using SvgPlotter;
-using System.Drawing;
-using System.IO;
+﻿using OrreryPlotter;
+using Orrery;
 
 using StreamWriter sw = new("tryout.svg", false);
 SkyChart sc = new();
 sc.Start = DateTimeOffset.Now;
-//sc.Start = new DateTimeOffset(2021, 10, 20, 12, 0, 0, TimeSpan.Zero);
 sc.End = sc.Start.AddDays(365);
-sc.Interval = TimeSpan.FromDays(1);
-sc.LongLat = new((float)-0.3735825, (float)52.8400336); // Rippingale
+sc.Interval = Units.SiderealDay;
+//sc.Interval = TimeSpan.FromDays(1);
+sc.LongLat = new((float)-3.0307, (float)56.3773); // Rathillet
 sc.BodyNames.Add("Sun");
 sc.BodyNames.Add("Mercury");
 sc.BodyNames.Add("Venus");
@@ -20,4 +17,8 @@ sc.BodyNames.Add("Saturn");
 sc.BodyNames.Add("Uranus");
 sc.BodyNames.Add("Neptune");
 sc.BodyNames.Add("Pluto");
+sc.BodyNames.Add("Ceres");
+sc.BodyNames.Add("Makemake");
+sc.BodyNames.Add("Haumea");
+sc.BodyNames.Add("Eris");
 sw.WriteLine(sc.PlotSvg());

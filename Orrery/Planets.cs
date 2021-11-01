@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Orrery
 {
@@ -15,7 +13,7 @@ namespace Orrery
 
         public List<CelestialBody> Bodies = new();
 
-        public CelestialBody FindBody(string name) 
+        public CelestialBody FindBody(string name)
             => Bodies.FirstOrDefault(b => string.Equals(b.Name, name, StringComparison.CurrentCultureIgnoreCase));
 
         public void AddPlanets()
@@ -36,7 +34,8 @@ namespace Orrery
                 LongitudeOfPerihelion = new(77.45645, 573.57 / (Units.ArcSecondsPerDegree * Units.DaysPerCentury)),
                 MeanLongitude = new(252.25084, 538101628.29 / (Units.ArcSecondsPerDegree * Units.DaysPerCentury)),
                 Mass = 3.301E23,
-                Period = 7.6005216E6
+                Period = 7.6005216E6,
+                JDEpoch = Units.JulianDate2000
             });
 
             Bodies.Add(new()
@@ -49,7 +48,8 @@ namespace Orrery
                 LongitudeOfPerihelion = new(131.53298, -108.80 / (Units.ArcSecondsPerDegree * Units.DaysPerCentury)),
                 MeanLongitude = new(181.97973, 210664136.06 / (Units.ArcSecondsPerDegree * Units.DaysPerCentury)),
                 Mass = 4.869E24,
-                Period = 19.4141664E6
+                Period = 19.4141664E6,
+                JDEpoch = Units.JulianDate2000
             });
 
             Bodies.Add(new()
@@ -62,7 +62,8 @@ namespace Orrery
                 LongitudeOfPerihelion = new(102.94719, 1198.28 / (Units.ArcSecondsPerDegree * Units.DaysPerCentury)),
                 MeanLongitude = new(100.46435, 129597740.63 / (Units.ArcSecondsPerDegree * Units.DaysPerCentury)),
                 Mass = 5.978E24,
-                Period = 31.5581184E6
+                Period = 31.5581184E6,
+                JDEpoch = Units.JulianDate2000
             });
 
             Bodies.Add(new()
@@ -75,7 +76,8 @@ namespace Orrery
                 LongitudeOfPerihelion = new(336.04084, 1560.78 / (Units.ArcSecondsPerDegree * Units.DaysPerCentury)),
                 MeanLongitude = new(355.45332, 68905103.78 / (Units.ArcSecondsPerDegree * Units.DaysPerCentury)),
                 Mass = 6.420E23,
-                Period = 59.355072E6
+                Period = 59.355072E6,
+                JDEpoch = Units.JulianDate2000
             });
 
             Bodies.Add(new()
@@ -88,7 +90,8 @@ namespace Orrery
                 LongitudeOfPerihelion = new(14.75385, 839.93 / (Units.ArcSecondsPerDegree * Units.DaysPerCentury)),
                 MeanLongitude = new(34.40438, 10925078.35 / (Units.ArcSecondsPerDegree * Units.DaysPerCentury)),
                 Mass = 1.899E27,
-                Period = 374.335776E6
+                Period = 374.335776E6,
+                JDEpoch = Units.JulianDate2000
             });
 
             Bodies.Add(new()
@@ -101,7 +104,8 @@ namespace Orrery
                 LongitudeOfPerihelion = new(92.43194, -1948.89 / (Units.ArcSecondsPerDegree * Units.DaysPerCentury)),
                 MeanLongitude = new(49.94432, 4401052.95 / (Units.ArcSecondsPerDegree * Units.DaysPerCentury)),
                 Mass = 5.685E26,
-                Period = 929.59488E6
+                Period = 929.59488E6,
+                JDEpoch = Units.JulianDate2000
             });
 
             Bodies.Add(new()
@@ -114,7 +118,8 @@ namespace Orrery
                 LongitudeOfPerihelion = new(170.96424, 1312.56 / (Units.ArcSecondsPerDegree * Units.DaysPerCentury)),
                 MeanLongitude = new(313.23218, 1542547.79 / (Units.ArcSecondsPerDegree * Units.DaysPerCentury)),
                 Mass = 8.686E25,
-                Period = 2.651184E9
+                Period = 2.651184E9,
+                JDEpoch = Units.JulianDate2000
             });
 
             Bodies.Add(new()
@@ -127,8 +132,11 @@ namespace Orrery
                 LongitudeOfPerihelion = new(44.97135, -844.43 / (Units.ArcSecondsPerDegree * Units.DaysPerCentury)),
                 MeanLongitude = new(304.88003, 786449.21 / (Units.ArcSecondsPerDegree * Units.DaysPerCentury)),
                 Mass = 1.025E26,
-                Period = 5.20043328E9
+                Period = 5.20043328E9,
+                JDEpoch = Units.JulianDate2000
             });
+
+            // Dwarf planets
 
             Bodies.Add(new()
             {
@@ -140,7 +148,64 @@ namespace Orrery
                 LongitudeOfPerihelion = new(224.06676, -132.25 / (Units.ArcSecondsPerDegree * Units.DaysPerCentury)),
                 MeanLongitude = new(238.92881, 522747.90 / (Units.ArcSecondsPerDegree * Units.DaysPerCentury)),
                 Mass = 5.0E23,
-                Period = 7.81619328E9
+                Period = 7.81619328E9,
+                JDEpoch = Units.JulianDate2000
+            });
+
+            Bodies.Add(new()
+            {
+                Name = "Ceres",
+                MeanDistance = new(2.765655253487926),
+                Eccentricity = new(0.07839201989374402),
+                Inclination = new(10.58819557618916),
+                LongitudeOfAscendingNode = new(80.26763801181816),
+                LongitudeOfPerihelion = new(73.73826765873966),
+                MeanLongitude = new(247.5499723080229, 0.2142925185981219),
+                Mass = 9.3835E20,
+                Period = 1680 * Units.SecondsPerDay,
+                JDEpoch = 2459396.5  // 1 Jul 2021
+            });
+
+            Bodies.Add(new()
+            {
+                Name = "Makemake",
+                MeanDistance = new(45.31759121068865),
+                Eccentricity = new(0.1642751172211797),
+                Inclination = new(28.99404015412712),
+                LongitudeOfAscendingNode = new(79.53649291791409),
+                LongitudeOfPerihelion = new(294.9740979213105),
+                MeanLongitude = new(166.6195793661593, 0.003230753679451443),
+                Mass = 3.1E21,
+                Period = 111429.10779293 * Units.SecondsPerDay,
+                JDEpoch = 2459396.5  // 1 Jul 2021
+            });
+
+            Bodies.Add(new()
+            {
+                Name = "Haumea",
+                MeanDistance = new(43.05422018169887),
+                Eccentricity = new(0.1977572977729642),
+                Inclination = new(28.21337546344851),
+                LongitudeOfAscendingNode = new(122.156974377769),
+                LongitudeOfPerihelion = new(239.3358522215767),
+                MeanLongitude = new(218.5798852779577, 0.003488835418767116),
+                Mass = 4.006E21,
+                Period = 103186.2947915201 * Units.SecondsPerDay,
+                JDEpoch = 2459396.5  // 1 Jul 2021
+            });
+
+            Bodies.Add(new()
+            {
+                Name = "Eris",
+                MeanDistance = new(68.00384172219358),
+                Eccentricity = new(0.4334678185404781),
+                Inclination = new(43.90881494037654),
+                LongitudeOfAscendingNode = new(36.00746756407726),
+                LongitudeOfPerihelion = new(151.446430148214),
+                MeanLongitude = new(206.8928917815872, 0.001757534674844556),
+                Mass = 1.6466E22,
+                Period = 204832.3740934671 * Units.SecondsPerDay,
+                JDEpoch = 2459396.5  // 1 Jul 2021
             });
         }
     }

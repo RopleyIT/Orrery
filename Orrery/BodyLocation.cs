@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Orrery
+﻿namespace Orrery
 {
     /// <summary>
     /// Positional and other data found for a
     /// celestial body at a specified time and date
     /// </summary>
-    
+
     public class BodyLocation
     {
         public double JulianDate { get; set; }

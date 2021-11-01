@@ -28,7 +28,7 @@ namespace SvgPlotter
         /// <param name="closed">True to close the 
         /// last point back to the first with a line</param>
         /// <returns>The path created</returns>
-        
+
         public static SVGPath FromPoints(IEnumerable<PointF> points, bool closed)
             => new(points, closed);
 
@@ -64,7 +64,7 @@ namespace SvgPlotter
 
         public SVGPath() { }
 
-        public void MoveTo(PointF p) 
+        public void MoveTo(PointF p)
             => Elements.Add(SVGPathElement.MoveTo(p.X, p.Y));
 
         public void MoveRel(float dx, float dy)
@@ -109,7 +109,7 @@ namespace SvgPlotter
                 where e.Points != null && e.Points.Count > 0
                 select e;
 
-            if(elementsWithPoints.Any())
+            if (elementsWithPoints.Any())
             {
                 bbox = elementsWithPoints.First().BoundingBox();
                 foreach (SVGPathElement e in elementsWithPoints.Skip(1))
@@ -147,7 +147,7 @@ namespace SvgPlotter
         public string RenderStye()
         {
             StringWriter sw = new();
-            if(!string.IsNullOrEmpty(Stroke))
+            if (!string.IsNullOrEmpty(Stroke))
                 sw.Write($" stroke=\"{Stroke}\"");
             if (!string.IsNullOrEmpty(Fill))
                 sw.Write($" fill=\"{Fill}\"");
@@ -215,7 +215,7 @@ namespace SvgPlotter
             return element;
         }
 
-        public static SVGPathElement MoveTo(float x, float y) 
+        public static SVGPathElement MoveTo(float x, float y)
             => MoveTo(new PointF(x, y));
 
         public static SVGPathElement MoveRel(float dx, float dy)
@@ -345,8 +345,8 @@ namespace SvgPlotter
         /// the ellipse has been rotated (radians)</param>
         /// <returns>The width and height of one quarter of the bounding box
         /// surrounding the rotated ellipse</returns>
-        
-        private SizeF EllipseQuarterBounds(float rx, float ry, float angle)
+
+        private static SizeF EllipseQuarterBounds(float rx, float ry, float angle)
         {
             var cosAngle = Math.Cos(angle);
             var sinAngle = Math.Sin(angle);
@@ -355,7 +355,7 @@ namespace SvgPlotter
             return new SizeF((float)xr, (float)yr);
         }
 
-        private double Sqr(double v) => v * v;
+        private static double Sqr(double v) => v * v;
 
         private static string RenderPoint(PointF p) => $"{p.X:F2},{p.Y:F2}";
 

@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Orrery
 {
     /// <summary>
     /// Implement a coordinate in three dimensions
     /// </summary>
-    
+
     public class Coordinate
     {
         public double X { get; set; }
@@ -41,7 +37,7 @@ namespace Orrery
         /// Magnitude of the coordinate in
         /// spherical polar coordinates
         /// </summary>
-        
+
         public double R =>
             Math.Sqrt(X * X + Y * Y + Z * Z);
 
@@ -49,7 +45,7 @@ namespace Orrery
         /// Angle anticlockwise about Z axis from
         /// positive X axis. Measured in degrees
         /// </summary>
-        
+
         public double RA
         {
             get
@@ -69,7 +65,7 @@ namespace Orrery
         /// Angle upwards from the X-Y plane (negative
         /// if below the XY plane). Measured in degrees
         /// </summary>
-        
+
         public double Dec
         {
             get

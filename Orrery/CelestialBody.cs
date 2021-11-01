@@ -7,7 +7,7 @@ namespace Orrery
     /// the sky of a Heliocentric orbiting body
     /// such as a planet, planetoid, or asteroid.
     /// </summary>
-    
+
     public class CelestialBody
     {
         /// <summary>
@@ -65,10 +65,15 @@ namespace Orrery
         public Polynomial LongitudeOfAscendingNode { get; set; }
 
         /// <summary>
+        /// The Julian Date on which the polynomial values apply
+        /// </summary>
+        public double JDEpoch { get; set; }
+        
+        /// <summary>
         /// Earth radius in astronomical units
         /// </summary>
-        
-        public const double EarthRadius =  6.371E6/Units.MetresPerAU;
+
+        public const double EarthRadius = 6.371E6 / Units.MetresPerAU;
 
         // Finding the position of a planet on its orbit at a given time
         // is not straightforward with a single equation, due to problems
@@ -122,7 +127,7 @@ namespace Orrery
         // its elliptical orbit, between the planet position and a line drawn
         // to the perihelion point. N.B. This is NOT the angle formed at the 
         // sun nor is it the angle formed at the body-sun barycentre.</returns>
-        
+
         static double CalcE(double L, double w, double e)
         {
             double dE1, dE2;          // Estimates for eccentric anomaly 
@@ -156,10 +161,10 @@ namespace Orrery
         // centre of the sun, even though E is an angle at the centre of the
         // elliptical orbit.
 
-        static double CalcX(double a, double E, double e) 
+        static double CalcX(double a, double E, double e)
             => a * (Math.Cos(Units.DegToRad(E)) - e);
 
-        static double CalcY(double a, double E, double e) 
+        static double CalcY(double a, double E, double e)
             => a * Math.Sqrt(1 - e * e) * Math.Sin(Units.DegToRad(E));
 
         // Velocity components of the planets parallel to the above x and y
@@ -167,10 +172,10 @@ namespace Orrery
         // a planet due to aberration, i.e. finite speed of light combined
         // with the relative speed of the earth and the observed planet.
 
-        static double CalcU(double a, double E, double r) 
+        static double CalcU(double a, double E, double r)
             => -0.0172021 * Math.Sqrt(a) * Math.Sin(Units.DegToRad(E)) / r;
 
-        static double CalcV(double a, double E, double r, double e) 
+        static double CalcV(double a, double E, double r, double e)
             => 0.0172021 * Math.Sqrt(a * (1 - e * e)) * Math.Cos(Units.DegToRad(E)) / r;
 
         // The standard cartesian coordinate system for space allows a planet
@@ -243,39 +248,39 @@ namespace Orrery
         (
                 CelestialBody plan, // Body to find coordinates for
                 double absJD        // Time for which planet location required 
-        ) 
+        )
         {
             Coordinate pos = new();
             Coordinate vel = new();
             double a, e, i, L, w, W, E, r, x, y, u, v;
 
-            if(string.Compare(plan.Name, "Sun", true ) == 0) // If looking for the sun
-            { 
+            if (string.Compare(plan.Name, "Sun", true) == 0) // If looking for the sun
+            {
                 pos.X = pos.Y = pos.Z = 0.0;    // Sun at origin, as heliocentric
                 vel.X = vel.Y = vel.Z = 0.0;    // Sun stationary, as heliocentric
                 return (pos, vel);
             }
 
-            double jd = absJD - Units.JulianDate2000;
-            a = plan.MeanDistance.At(jd);  
-            e = plan.Eccentricity.At(jd); 
-            i = plan.Inclination.At(jd); 
+            double jd = absJD - plan.JDEpoch;
+            a = plan.MeanDistance.At(jd);
+            e = plan.Eccentricity.At(jd);
+            i = plan.Inclination.At(jd);
             L = plan.MeanLongitude.At(jd);
             w = plan.LongitudeOfPerihelion.At(jd);
             W = plan.LongitudeOfAscendingNode.At(jd);
 
-            E = CalcE(L, w, e );           // Iterative search for eccentric anomaly
+            E = CalcE(L, w, e);           // Iterative search for eccentric anomaly
 
-            x = CalcX(a, E, e );           //  x,y are coords within plane of orbit
-            y = CalcY(a, E, e );
-            r = Math.Sqrt(x*x + y*y);      // Distance of planet from sun
+            x = CalcX(a, E, e);           //  x,y are coords within plane of orbit
+            y = CalcY(a, E, e);
+            r = Math.Sqrt(x * x + y * y);      // Distance of planet from sun
 
-            u = CalcU(a, E, r );           // Velocity components in orbital plane
-            v = CalcV(a, E, r, e );        // used to calculate relativistic aberration 
+            u = CalcU(a, E, r);           // Velocity components in orbital plane
+            v = CalcV(a, E, r, e);        // used to calculate relativistic aberration 
 
             pos = ToHelioCoord(x, y, W, w, i); // Convert to heliocentric coordinates
-            if(plan.Name == "Earth" )          // For earth, just move from barycentre
-                    BaryTranslate(pos, absJD );
+            if (plan.Name == "Earth")          // For earth, just move from barycentre
+                BaryTranslate(pos, absJD);
             vel = ToHelioCoord(u, v, W, w, i); // Heliocentric velocities
             return (pos, vel);
         }
@@ -293,10 +298,10 @@ namespace Orrery
 
         static Coordinate GeoEcliptic(CelestialBody earth, CelestialBody plan, double jd, bool doAberr)
         {
-            var pv = GetHeliocentric(plan, jd);  /* Find planet itself    */
+            var (Position, Velocity) = GetHeliocentric(plan, jd);  /* Find planet itself    */
             var ev = GetHeliocentric(earth, jd); /* Needed for rel coords */
-            Coordinate ppos = pv.Position;
-            Coordinate pvel = pv.Velocity;
+            Coordinate ppos = Position;
+            Coordinate pvel = Velocity;
             Coordinate epos = ev.Position;
             Coordinate evel = ev.Velocity;
 
@@ -337,36 +342,36 @@ namespace Orrery
         //         obliquity is reducing by 0.013 of a degree per century at the
         //         moment, which must be accommodated.
 
-        static void Precess( Coordinate p, double jd )
+        static void Precess(Coordinate p, double jd)
         {
             double a, b, c;                 /* Used for precession and nutation */
 
-            jd = (jd - Units.JulianDate2000)/36525;    /* Centuries relative to 2000.0     */
-            a = 1.397*jd;                   /* Setup parameters for precession  */
-            b = 0.0131*jd;
-            c = 5.1236 + 0.2416*jd;
+            jd = (jd - Units.JulianDate2000) / 36525;    /* Centuries relative to 2000.0     */
+            a = 1.397 * jd;                   /* Setup parameters for precession  */
+            b = 0.0131 * jd;
+            c = 5.1236 + 0.2416 * jd;
             var ra = Units.DegToRad(p.RA + c);
             p.Dec += b * Math.Sin(ra);
-            p.RA += a - b * Math.Cos(ra)*Math.Tan(Units.DegToRad(p.Dec));
+            p.RA += a - b * Math.Cos(ra) * Math.Tan(Units.DegToRad(p.Dec));
         }
 
-        static double Nutate( Coordinate p, double jd )
+        static double Nutate(Coordinate p, double jd)
         {
             double dp, de;       /* Rotary and declination nutation components   */
 
-            jd = jd - Units.JulianDate2000;                  /* Days relative to 2000.0     */
+            jd -= Units.JulianDate2000;                  /* Days relative to 2000.0     */
             double a1 = Units.DegToRad(125.0 - 0.05295 * jd);
             double a2 = Units.DegToRad(200.9 + 1.97129 * jd);
-            dp = -0.0048* Math.Sin(a1);
-            dp -= 0.0004* Math.Sin(a2);
-            de = 0.0026* Math.Cos(a1);
-            de += 0.0002* Math.Cos(a2);
+            dp = -0.0048 * Math.Sin(a1);
+            dp -= 0.0004 * Math.Sin(a2);
+            de = 0.0026 * Math.Cos(a1);
+            de += 0.0002 * Math.Cos(a2);
 
             p.RA += dp;          /* Add rotary nutation component straight in */
             return de;           /* Return nodding component to caller        */
         }
 
-        static void GeoEquatorial( Coordinate p, double jd, double de )
+        static void GeoEquatorial(Coordinate p, double jd, double de)
         {
             double ra = Units.DegToRad(p.RA);
             double dec = Units.DegToRad(p.Dec);
@@ -408,11 +413,11 @@ namespace Orrery
             // Now add in the part of a day component
 
             ra += 0.25068447 * 60 * 24 * (jd - Math.Floor(jd) + 0.5);
-            ra = ra % 360.0; // Round down to one revolution 
+            ra %= 360.0; // Round down to one revolution 
             return ra;
         }
 
-        static void ToGreenwichCoords(Coordinate pc, double jd) 
+        static void ToGreenwichCoords(Coordinate pc, double jd)
             => pc.RA -= GetMeridianRA(jd);
 
         // For telescope-steering purposes, we need to be able to calculate
@@ -428,7 +433,7 @@ namespace Orrery
         // To revert to degrees west, reverse the subtraction
         // that produces pa near the top of this routine.
 
-        static Coordinate FindAzimElev( Coordinate p, double y, double z )
+        static Coordinate FindAzimElev(Coordinate p, double y, double z)
         {
             double pa;      // Difference in W. longitudes of SPP and observer
             double csg;     // Cosine of angle at earth centre between ground 
@@ -440,17 +445,17 @@ namespace Orrery
 
             // Set up difference in W. longitudes of SPP and observer
             // NB This way round to swap E. longitudes to diff in W. longitudes 
-            
+
             pa = Units.DegToRad(y - p.RA);
-            while(pa < -Math.PI)       // Map into the range -PI to +PI
-                    pa += 2*Math.PI;
-            while(pa > Math.PI)
-                    pa -= 2*Math.PI;
+            while (pa < -Math.PI)       // Map into the range -PI to +PI
+                pa += 2 * Math.PI;
+            while (pa > Math.PI)
+                pa -= 2 * Math.PI;
 
             // Calculate cosine of angle between SPP and observer
             double dec = Units.DegToRad(p.Dec);
-            csg = cz*Math.Cos(dec) * Math.Cos(pa)
-                    + sz* Math.Sin(dec);
+            csg = cz * Math.Cos(dec) * Math.Cos(pa)
+                    + sz * Math.Sin(dec);
 
             // Find distance from observer to planet 
 
@@ -464,14 +469,14 @@ namespace Orrery
 
             // Find elevation of planet relative to observer
 
-            ae.Dec = 90.0 - Units.RadToDeg(Math.Acos((p.R * csg - EarthRadius) / ae.X ) );
+            ae.Dec = 90.0 - Units.RadToDeg(Math.Acos((p.R * csg - EarthRadius) / ae.X));
 
             // Azimuth of planet relative to observer 
 
-            double ra = Math.Sin(dec) - sz*csg;
-            ra /= cz* Math.Sin(Math.Acos(csg));
+            double ra = Math.Sin(dec) - sz * csg;
+            ra /= cz * Math.Sin(Math.Acos(csg));
             ra = Units.RadToDeg(Math.Acos(ra));
-            if(pa > 0.0 )
+            if (pa > 0.0)
                 ae.RA = 360.0 - ra;
             else
                 ae.RA = ra;
@@ -483,14 +488,14 @@ namespace Orrery
 
         static Coordinate FindRADec(CelestialBody earth, CelestialBody plan, double jd, bool doAberration)
         {
-            double de = 0.0;                /* Trans-polar nutation component   */
+            double de;                // Trans-polar nutation component
 
             Coordinate p = GeoEcliptic(earth, plan, jd, doAberration);
-            Precess( p, jd );      /* Accommodate precession           */
-            de = Nutate( p, jd );  /* Correct for nutation             */
-            GeoEquatorial( p, jd, de );    /* Translate to earth coordinates   */
-            if(p.RA < 0.0 )                /* All right ascensions positive    */
-                    p.RA += 360.0;
+            Precess(p, jd);           // Accommodate precession
+            de = Nutate(p, jd);       // Correct for nutation 
+            GeoEquatorial(p, jd, de); // Translate to earth coordinates
+            if (p.RA < 0.0)           // All right ascensions positive
+                p.RA += 360.0;
             return p;
         }
 
@@ -515,7 +520,7 @@ namespace Orrery
         /// about the celestial body at the chosen date and time</returns>
         /// <exception cref="ArgumentException">Thrown if an invalid
         /// planet name is provided as an argument</exception>
-        
+
         public static BodyLocation Find
             (
                 string planetName,      /* Which celestial object we are seeking */
@@ -524,21 +529,19 @@ namespace Orrery
                 double obsLat
             )
         {
-            if(planets == null)
+            if (planets == null)
                 planets = new Planets();
             CelestialBody plan = planets.FindBody(planetName);
-            if (plan == null)
-                throw new ArgumentException("Invalid planet name");
             CelestialBody earth = planets.FindBody("Earth");
             BodyLocation co = new();
             co.JulianDate = jd;
-            co.Body = plan;
-            Coordinate raDec = FindRADec(earth, plan, jd, true );
+            co.Body = plan ?? throw new ArgumentException("Invalid planet name");
+            Coordinate raDec = FindRADec(earth, plan, jd, true);
             co.RightAscension = raDec.RA;
             co.Declination = raDec.Dec;
-            ToGreenwichCoords( raDec, jd );
+            ToGreenwichCoords(raDec, jd);
             co.Longitude = raDec.RA;
-            raDec = FindAzimElev(raDec, obsLong, obsLat );
+            raDec = FindAzimElev(raDec, obsLong, obsLat);
             co.Azimuth = raDec.RA;
             co.Elevation = raDec.Dec;
             co.Distance = raDec.R;

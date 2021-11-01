@@ -40,7 +40,7 @@ namespace SvgPlotter
             return AddElement(r);
         }
 
-        public IRenderable AddPath(IEnumerable<PointF> points, bool close, string stroke, double strokeWidth, string fill) 
+        public IRenderable AddPath(IEnumerable<PointF> points, bool close, string stroke, double strokeWidth, string fill)
             => AddWithStyle(new SVGPath(points, close), stroke, strokeWidth, fill);
 
         public IRenderable AddEllipse(PointF centre, SizeF radii, string stroke, double strokeWidth, string fill)
@@ -53,8 +53,8 @@ namespace SvgPlotter
             return AddWithStyle(path, stroke, strokeWidth, fill);
         }
 
-        public IRenderable AddText(string text, PointF location, string fontSize = "20px", 
-            string fontName="sans-serif", bool italic = false, bool bold = false, string fill = "")
+        public IRenderable AddText(string text, PointF location, string fontSize = "20px",
+            string fontName = "sans-serif", bool italic = false, bool bold = false, string fill = "")
         {
             IRenderable r = new SvgText(text, location, fontSize, fontName, italic, bold);
             if (!string.IsNullOrWhiteSpace(fill))
@@ -94,10 +94,10 @@ namespace SvgPlotter
 
         public IRenderable AddLine(PointF start, PointF end, string stroke, double strokeWidth)
             => AddPath(new PointF[] { start, end }, false, stroke, strokeWidth, null);
-        
+
         public IRenderable AddPolyline(IEnumerable<PointF> points, string stroke, double strokeWidth)
             => AddPath(points, false, stroke, strokeWidth, null);
-        
+
         public IRenderable AddPolygon(IEnumerable<PointF> points, string stroke, double strokeWidth, string fill)
             => AddPath(points, true, stroke, strokeWidth, fill);
 
@@ -127,7 +127,7 @@ namespace SvgPlotter
 
         public void CalculateViewBox(SizeF margin)
         {
-            if(svgElements != null && svgElements.Count > 0)
+            if (svgElements != null && svgElements.Count > 0)
             {
                 ViewBoxDimensions = svgElements[0].BoundingBox();
                 foreach (IRenderable p in svgElements.Skip(1))
@@ -157,8 +157,8 @@ namespace SvgPlotter
         }
 
 
-        public static RectangleF CreateNormalisedRect(PointF a, PointF b) 
-            => new(Math.Min(a.X, b.X), Math.Min(a.Y, b.Y), 
+        public static RectangleF CreateNormalisedRect(PointF a, PointF b)
+            => new(Math.Min(a.X, b.X), Math.Min(a.Y, b.Y),
                 Math.Abs(a.X - b.X), Math.Abs(a.Y - b.Y));
     }
 }
