@@ -1,6 +1,4 @@
-﻿using System.IO;
-using System;
-using OrreryPlotter;
+﻿using OrreryPlotter;
 using Orrery;
 
 using StreamWriter sw = new("tryout.svg", false);

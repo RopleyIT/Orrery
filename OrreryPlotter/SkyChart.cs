@@ -1,8 +1,6 @@
 ﻿using Orrery;
 using SvgPlotter;
 using System.Drawing;
-using System.Collections.Generic;
-using System;
 
 namespace OrreryPlotter;
 
