@@ -1,39 +1,38 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 
-namespace SvgPlotter
+namespace SvgPlotter;
+
+public enum LineCap
 {
-    public enum LineCap
-    {
-        None,
-        Butt,
-        Square,
-        Round
-    }
+    None,
+    Butt,
+    Square,
+    Round
+}
 
-    public enum LineJoin
-    {
-        None,
-        Mitre,
-        Round,
-        Bevel
-    }
+public enum LineJoin
+{
+    None,
+    Mitre,
+    Round,
+    Bevel
+}
 
-    public interface IRenderable
-    {
-        string Stroke { get; set; }
+public interface IRenderable
+{
+    string Stroke { get; set; }
 
-        string StrokeWidth { get; set; }
+    string StrokeWidth { get; set; }
 
-        string Fill { get; set; }
+    string Fill { get; set; }
 
-        LineCap Cap { get; set; }
+    LineCap Cap { get; set; }
 
-        LineJoin Join { get; set; }
+    LineJoin Join { get; set; }
 
-        IEnumerable<int> Dashes { get; set; }
-        void SetDashes(params int[] dashes);
+    IEnumerable<int> Dashes { get; set; }
+    void SetDashes(params int[] dashes);
 
-        RectangleF BoundingBox();
-    }
+    RectangleF BoundingBox();
 }
