@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrreryPlotter", "OrreryPlot
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SvgPlotter", "SvgPlotter\SvgPlotter.csproj", "{A71E6C55-A910-4028-8913-502FBB2C8E43}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TryOut", "TryOut\TryOut.csproj", "{736BB400-DB9B-4078-A70C-CCD187DDB450}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TryOut", "TryOut\TryOut.csproj", "{736BB400-DB9B-4078-A70C-CCD187DDB450}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrreryUI", "OrreryUI\OrreryUI.csproj", "{53036BE3-9BDE-41A1-8B17-055365E31DB5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{736BB400-DB9B-4078-A70C-CCD187DDB450}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{736BB400-DB9B-4078-A70C-CCD187DDB450}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{736BB400-DB9B-4078-A70C-CCD187DDB450}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53036BE3-9BDE-41A1-8B17-055365E31DB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53036BE3-9BDE-41A1-8B17-055365E31DB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53036BE3-9BDE-41A1-8B17-055365E31DB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53036BE3-9BDE-41A1-8B17-055365E31DB5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

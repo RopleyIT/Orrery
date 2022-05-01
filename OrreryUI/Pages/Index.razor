@@ -1,0 +1,82 @@
+﻿@page "/"
+
+<PageTitle>Planet Positions</PageTitle>
+
+<h1>Plot Planet Positions</h1>
+
+Fill in the form below with your latitude and longitude, 
+with the starting date, ending date and interval between
+planet positions plots, then press 'Submit' to see your plot.
+
+<EditForm Model=@OrbitParams OnSubmit=@NewParamsSubmitted>
+    <DataAnnotationsValidator />
+    <div class="form-group row">
+        <div class="col">
+        <label for="Lat">Observer Latitude</label>
+        <InputNumber @bind-Value=OrbitParams.Latitude 
+                     ParsingErrorMessage="Must be a number of degrees" 
+                     class="form-control"
+                     id="Lat"/>
+        </div>
+        <div class="col">
+        <label for="Long">Observer Longitude</label>
+        <InputNumber @bind-Value=OrbitParams.Longitude 
+                     ParsingErrorMessage="Must be a number of degrees" 
+                     class="form-control"
+                     id="Long"/>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col">
+        <label for="Start">Start of display period</label>
+        <InputDate @bind-Value=OrbitParams.Start 
+                   ParsingErrorMessage="Must be a valid date" 
+                   class="form-control"
+                   id="Start"/>
+        </div>
+        <div class="col">
+        <label for="End">End of display period</label>
+        <InputDate @bind-Value=OrbitParams.End 
+                   ParsingErrorMessage="Must be a valid date" 
+                   class="form-control"
+                   id="End"/>
+        </div>
+        <div class="col">
+        <label for="Interval">Time interval between plot points</label>
+        <InputSelect @bind-Value=OrbitParams.Interval 
+                     ParsingErrorMessage="Please select an interval"
+                     class="form-control"
+                     id="Interval">
+            <option value="year">Year</option>
+            <option value="week">Week</option>
+            <option value="sidereal">Sidereal Day</option>
+            <option value="day">Earth Day</option>
+            <option value="hour">Hour</option>
+            <option value="minute">Minute</option>
+        </InputSelect>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col">
+        <ValidationSummary/>
+        <input type="submit" value="Submit" class="btn btn-primary"/>
+        </div>
+    </div>
+</EditForm>
+<div>
+    @SvgData
+</div>
+@code
+{
+    Data.OrbitParams OrbitParams = new();
+    void NewParamsSubmitted(EditContext editContext)
+    {
+        bool formIsValid = editContext.Validate();
+        if(formIsValid)
+        {
+            SvgData = new MarkupString(OrbitParams.GetSkySvg());
+        }
+    }
+
+    MarkupString SvgData = new MarkupString();
+}
