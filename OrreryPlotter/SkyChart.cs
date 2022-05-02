@@ -61,7 +61,7 @@ public class SkyChart
         }
         locations.Sort(FarthestLast);
         for (int i = 0; i < locations.Count; i++)
-            PlotBody(svg, locations[i], BodyNames.IndexOf(locations[i].Body.Name));
+            PlotBody(svg, locations[i], CelestialBody.PlanetIndex(locations[i].Body.Name));
 
         svg.CalculateViewBox(new SizeF(20, 20));
         return svg.ToString();
@@ -104,7 +104,10 @@ public class SkyChart
     }
     void PlotBody(SVGCreator svg, BodyLocation loc, int colour)
     {
-        PointF centre = new((float)loc.Azimuth * 5, (float)loc.Elevation * -5);
-        svg.AddCircle(centre, 10, "black", 1, bodyColours[colour]);
+        if (colour >= 0 && loc != null && svg != null)
+        {
+            PointF centre = new((float)loc.Azimuth * 5, (float)loc.Elevation * -5);
+            svg.AddCircle(centre, 10, "black", 1, bodyColours[colour]);
+        }
     }
 }

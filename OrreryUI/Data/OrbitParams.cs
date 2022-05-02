@@ -24,7 +24,7 @@ namespace OrreryUI.Data
 
         public List<string> Bodies { get; set; }
 
-        public string GetSkySvg()
+        public string GetSkySvg(IEnumerable<string> planetNames)
         {
             // Convert the UI interval to a .NET duration type
 
@@ -45,28 +45,13 @@ namespace OrreryUI.Data
             sc.Interval = interval;
             sc.LongLat = new((float)Longitude, (float)Latitude);
             sc.BodyNames.Clear();
-            sc.BodyNames.AddRange(new List<string>
-            { 
-                "Sun", 
-                "Mercury", 
-                "Venus", 
-                "Mars",
-                "Jupiter",
-                //"Saturn",
-                //"Uranus",
-                //"Neptune",
-                //"Pluto",
-                //"Ceres",
-                //"Makemake",
-                //"Haumea",
-                //"Eris"
-            });
+            sc.BodyNames.AddRange(planetNames);
             return sc.PlotSvg();
         }
 
         // Adjust to current time of day and convert to UTC
 
-        private DateTimeOffset ConvertTime(DateTime when)
+        private static DateTimeOffset ConvertTime(DateTime when)
         {
             when = when.Date; // Map to previous midnight
             TimeSpan timeOfDay = DateTime.Now - DateTime.Today;

@@ -1,0 +1,65 @@
+﻿@typeparam TItem  
+<div style=@Style>  
+    <div class="row">
+    @if (Data != null)  
+    {
+        int i = 0;
+        foreach (var item in Data)  
+        {
+            var rowSep = new MarkupString("</div><div class=\"row\">");
+            if((i++ % Columns) == 0)
+            {
+                @rowSep
+            }
+            var Text = TextField?.Invoke(item);  
+            var Value = ValueField?.Invoke(item).ToString();  
+            bool Checked = false;  
+            if (SelectedValues.Contains(Value))  
+            {  
+                Checked = true;  
+            }  
+            <div class="col">
+            <input type="checkbox" checked=@Checked  @onchange="eventArgs => { CheckboxClicked(Value, eventArgs.Value); }" />  
+                    @Text </div>
+            }  
+            while((i++ % Columns) != 0)
+            {
+                <div class="col"></div>
+            }
+        }  
+    </div>
+</div>  
+  
+@code {
+    //Data for the Checkbox   
+    [Parameter] public IEnumerable<TItem> Data { get; set; }  
+    // The field to be shown adjacent to checkbox  
+    [Parameter] public Func<TItem, string> TextField { get; set; }  
+    // The Value which checkbox will return when checked   
+    [Parameter] public Func<TItem, object> ValueField { get; set; }  
+    // CSS Style for the Checkbox container   
+    [Parameter] public string Style { get; set; }  
+    // The array which contains the list of selected checkboxs   
+    [Parameter] public List<string> SelectedValues { get; set; }  
+    // The number of columns containing check boxes
+    [Parameter] public int Columns { get; set; }
+    //Method to update the selected value on click on checkbox   
+    public void CheckboxClicked(string aSelectedId, object aChecked)  
+    {  
+        if ((bool)aChecked)  
+        {  
+            if (!SelectedValues.Contains(aSelectedId))  
+            {  
+                SelectedValues.Add(aSelectedId);  
+            }  
+        }  
+        else  
+        {  
+            if (SelectedValues.Contains(aSelectedId))  
+            {  
+                SelectedValues.Remove(aSelectedId);  
+            }  
+        }  
+        StateHasChanged();  
+    }  
+}

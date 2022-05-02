@@ -1,5 +1,6 @@
 ﻿using System;
-
+using System.Collections.Generic;
+using System.Linq;
 namespace Orrery;
 
 /// <summary>
@@ -502,6 +503,26 @@ public class CelestialBody
     // The set of planetary data held by the orrery
 
     private static Planets planets = null;
+    public static IEnumerable<string> BodyNames
+    {
+        get
+        {
+            if(planets == null)
+                planets = new Planets();
+            return planets.Bodies.Select(b => b.Name);
+        }
+    }
+
+    public static int PlanetIndex(string name)
+    {
+        int i = 0;
+        foreach (string nm in BodyNames)
+            if (nm == name)
+                return i;
+            else
+                i++;
+        return -1;
+    }
 
 
     /// <summary>

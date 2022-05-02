@@ -1,12 +1,13 @@
 ﻿@page "/"
-
+@using Orrery
 <PageTitle>Planet Positions</PageTitle>
 
 <h1>Plot Planet Positions</h1>
 
-Fill in the form below with your latitude and longitude, 
-with the starting date, ending date and interval between
-planet positions plots, then press 'Submit' to see your plot.
+Fill in the form with your latitude and longitude,<br/>
+with the starting and ending date, the interval between<br/>
+planet positions plots, and your selection of heavenly<br/>
+bodies. Press 'Submit' to see your plot.
 
 <EditForm Model=@OrbitParams OnSubmit=@NewParamsSubmitted>
     <DataAnnotationsValidator />
@@ -57,6 +58,13 @@ planet positions plots, then press 'Submit' to see your plot.
         </div>
     </div>
     <div class="form-group row">
+        <CheckList Columns="5" 
+                   Data="@planetNames" 
+                   TextField="@((t)=>t)" 
+                   ValueField="@((t)=>t)"
+                   SelectedValues="@selectedPlanets"/>
+    </div>
+    <div class="form-group row">
         <div class="col">
         <ValidationSummary/>
         <input type="submit" value="Submit" class="btn btn-primary"/>
@@ -68,13 +76,30 @@ planet positions plots, then press 'Submit' to see your plot.
 </div>
 @code
 {
-    Data.OrbitParams OrbitParams = new();
+    Data.OrbitParams OrbitParams = new Data.OrbitParams();
+    List<string> selectedPlanets = new List<string>();
+
+    protected override void OnInitialized()
+    {
+        // Set up your defaults for starting values here
+
+        OrbitParams.Latitude = 51.86; // Gloucester
+        OrbitParams.Longitude = 2.24;
+        OrbitParams.Start = DateTime.Today;
+        OrbitParams.End = DateTime.Today.AddDays(365.25);
+        OrbitParams.Interval = "week";
+        selectedPlanets.Add("Sun");
+
+        base.OnInitialized();
+    }
+
+    List<string> planetNames = CelestialBody.BodyNames.Where(n => n != "Earth").ToList();
     void NewParamsSubmitted(EditContext editContext)
     {
         bool formIsValid = editContext.Validate();
         if(formIsValid)
         {
-            SvgData = new MarkupString(OrbitParams.GetSkySvg());
+            SvgData = new MarkupString(OrbitParams.GetSkySvg(selectedPlanets));
         }
     }
 

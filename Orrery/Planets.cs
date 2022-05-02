@@ -16,6 +16,8 @@ public class Planets
     public CelestialBody FindBody(string name)
         => Bodies.FirstOrDefault(b => string.Equals(b.Name, name, StringComparison.CurrentCultureIgnoreCase));
 
+    public int IndexOfBody(string name)
+        => Bodies.IndexOf(FindBody(name));
     public void AddPlanets()
     {
         Bodies.Add(new()
