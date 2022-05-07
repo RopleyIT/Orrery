@@ -24,6 +24,10 @@ public class SVGCreator
 {
     private readonly List<IRenderable> svgElements;
 
+    public bool HasXmlHeader { get; set; } = true;
+    
+    public bool HasWidthAndHeight { get; set; } = true;
+
     public SVGCreator() => svgElements = new List<IRenderable>();
 
     private IRenderable AddElement(IRenderable element)
@@ -112,16 +116,31 @@ public class SVGCreator
 
     public string InfoComment { get; set; }
 
-    private static string XmlHeader => "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>";
+    private static string XmlHeader => 
+        "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\r\n";
 
-    private string StartSvg =>
-        $"<svg width=\"{DocumentDimensions.Width}{DocumentDimensionUnits}\" "
-        + $"height=\"{DocumentDimensions.Height}{DocumentDimensionUnits}\" "
-        + $"viewBox=\"{ViewBoxDimensions.X}{ViewBoxDimensionUnits} "
-        + $"{ViewBoxDimensions.Y}{ViewBoxDimensionUnits} "
-        + $"{ViewBoxDimensions.Width}{ViewBoxDimensionUnits} "
-        + $"{ViewBoxDimensions.Height}{ViewBoxDimensionUnits}\" "
-        + $"xmlns=\"http://www.w3.org/2000/svg\">";
+    private string StartSvg
+    {
+        get
+        {
+            string startSvg = string.Empty;
+            if (HasXmlHeader)
+                startSvg += XmlHeader;
+            startSvg += "<svg ";
+            if(HasWidthAndHeight)
+                startSvg += $"width=\"{DocumentDimensions.Width}{DocumentDimensionUnits}\" "
+                        + $"height=\"{DocumentDimensions.Height}{DocumentDimensionUnits}\" ";
+            startSvg += $"viewBox=\"{ViewBoxDimensions.X}{ViewBoxDimensionUnits} "
+                        + $"{ViewBoxDimensions.Y}{ViewBoxDimensionUnits} "
+                        + $"{ViewBoxDimensions.Width}{ViewBoxDimensionUnits} "
+                        + $"{ViewBoxDimensions.Height}{ViewBoxDimensionUnits}\"";
+            if (HasXmlHeader)
+                startSvg += $" xmlns=\"http://www.w3.org/2000/svg\">";
+            else
+                startSvg += ">";
+            return startSvg;
+        }
+    }
 
     private static string EndSvg => "</svg>";
 
@@ -142,7 +161,6 @@ public class SVGCreator
     public override string ToString()
     {
         StringWriter sw = new();
-        sw.WriteLine(XmlHeader);
         if (!string.IsNullOrWhiteSpace(InfoComment))
         {
             sw.WriteLine("<!--");
