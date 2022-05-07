@@ -12,14 +12,14 @@ bodies. Press 'Submit' to see your plot.
 <EditForm Model=@OrbitParams OnSubmit=@NewParamsSubmitted>
     <DataAnnotationsValidator />
     <div class="form-group row">
-        <div class="col">
+        <div class="col p-3">
         <label for="Lat">Observer Latitude</label>
         <InputNumber @bind-Value=OrbitParams.Latitude 
                      ParsingErrorMessage="Must be a number of degrees" 
                      class="form-control"
                      id="Lat"/>
         </div>
-        <div class="col">
+        <div class="col p-3">
         <label for="Long">Observer Longitude</label>
         <InputNumber @bind-Value=OrbitParams.Longitude 
                      ParsingErrorMessage="Must be a number of degrees" 
@@ -28,21 +28,21 @@ bodies. Press 'Submit' to see your plot.
         </div>
     </div>
     <div class="form-group row">
-        <div class="col">
+        <div class="col p-3">
         <label for="Start">Start of display period</label>
         <InputDate @bind-Value=OrbitParams.Start 
                    ParsingErrorMessage="Must be a valid date" 
                    class="form-control"
                    id="Start"/>
         </div>
-        <div class="col">
+        <div class="col p-3">
         <label for="End">End of display period</label>
         <InputDate @bind-Value=OrbitParams.End 
                    ParsingErrorMessage="Must be a valid date" 
                    class="form-control"
                    id="End"/>
         </div>
-        <div class="col">
+        <div class="col p-3">
         <label for="Interval">Time interval between plot points</label>
         <InputSelect @bind-Value=OrbitParams.Interval 
                      ParsingErrorMessage="Please select an interval"
@@ -58,16 +58,19 @@ bodies. Press 'Submit' to see your plot.
         </div>
     </div>
     <div class="form-group row">
+        <div class="col p-3">
         <CheckList Columns="5" 
                    Data="@planetNames" 
                    TextField="@((t)=>t)" 
                    ValueField="@((t)=>t)"
                    SelectedValues="@selectedPlanets"/>
+    
+        </div>
     </div>
     <div class="form-group row">
-        <div class="col">
+        <div class="col p-3">
         <ValidationSummary/>
-        <input type="submit" value="Submit" class="btn btn-primary"/>
+        <input type="submit" value="Submit" class="btn btn-primary p-3"/>
         </div>
     </div>
 </EditForm>
