@@ -4,22 +4,22 @@
 
 <h1>Plot Planet Positions</h1>
 
-Fill in the form with your latitude and longitude,<br/>
-with the starting and ending date, the interval between<br/>
-planet positions plots, and your selection of heavenly<br/>
+Fill in the form with your latitude and longitude,
+with the starting and ending date, the interval between
+planet positions plots, and your selection of heavenly
 bodies. Press 'Submit' to see your plot.
 
 <EditForm Model=@OrbitParams OnSubmit=@NewParamsSubmitted>
     <DataAnnotationsValidator />
     <div class="form-group row">
-        <div class="col p-3">
+        <div class="col p-2">
         <label for="Lat">Observer Latitude</label>
         <InputNumber @bind-Value=OrbitParams.Latitude 
                      ParsingErrorMessage="Must be a number of degrees" 
                      class="form-control"
                      id="Lat"/>
         </div>
-        <div class="col p-3">
+        <div class="col p-2">
         <label for="Long">Observer Longitude</label>
         <InputNumber @bind-Value=OrbitParams.Longitude 
                      ParsingErrorMessage="Must be a number of degrees" 
@@ -28,21 +28,22 @@ bodies. Press 'Submit' to see your plot.
         </div>
     </div>
     <div class="form-group row">
-        <div class="col p-3">
+        <div class="col p-2">
         <label for="Start">Start of display period</label>
         <InputDate @bind-Value=OrbitParams.Start 
                    ParsingErrorMessage="Must be a valid date" 
                    class="form-control"
                    id="Start"/>
-        </div>
-        <div class="col p-3">
+                   <br/>
         <label for="End">End of display period</label>
         <InputDate @bind-Value=OrbitParams.End 
                    ParsingErrorMessage="Must be a valid date" 
                    class="form-control"
                    id="End"/>
         </div>
-        <div class="col p-3">
+        <!--<div class="col p-2">
+        </div>-->
+        <div class="col p-2">
         <label for="Interval">Time interval between plot points</label>
         <InputSelect @bind-Value=OrbitParams.Interval 
                      ParsingErrorMessage="Please select an interval"
@@ -55,24 +56,22 @@ bodies. Press 'Submit' to see your plot.
             <option value="hour">Hour</option>
             <option value="minute">Minute</option>
         </InputSelect>
+        <br/>
+            <ValidationSummary/>
+        <label for="BtnSubmit">Click to create a new plot</label><br/>
+            <input id="BtnSubmit" type="submit" value="Submit" class="btn btn-primary"/>
         </div>
-    </div>
-    <div class="form-group row">
-        <div class="col p-3">
-        <CheckList Columns="5" 
+        <div class="col p-2">
+        <CheckList Columns="3" 
                    Data="@planetNames" 
                    TextField="@((t)=>t)" 
                    ValueField="@((t)=>t)"
                    SelectedValues="@selectedPlanets"/>
-    
         </div>
     </div>
-    <div class="form-group row">
-        <div class="col p-3">
-        <ValidationSummary/>
-        <input type="submit" value="Submit" class="btn btn-primary p-3"/>
-        </div>
-    </div>
+    <!--<div class="form-group row">
+        <div class="col p-2">
+    </div>-->
 </EditForm>
 <div>
     @SvgData

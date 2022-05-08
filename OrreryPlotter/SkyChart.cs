@@ -16,6 +16,11 @@ public class SkyChart
 
     public string PlotSvg()
     {
+        // Turn off header, width and height
+
+        svg.HasXmlHeader = false;
+        svg.HasWidthAndHeight = false;
+
         // First plot the axes
 
         svg.AddLine(new PointF(-900, 0), new PointF(900, 0), "gray", 2);
