@@ -19,8 +19,8 @@ namespace OrreryUI.Data
       
         [Required]
         public DateTime End { get; set; }
-      
-        public string Interval { get; set; }
+
+        public string Interval { get; set; } 
 
         public List<string> Bodies { get; set; }
 

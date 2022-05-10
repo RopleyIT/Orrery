@@ -41,6 +41,18 @@ public class SkyChart
             element.SetDashes(5, 10);
             svg.AddText($"{j / 5}°", new PointF(j - 15, -5));
         }
+
+        // Now plot the times of day the plot took place
+
+        string times = $"From: {Start:dd MMM yy HH:mm:ss} UTC";
+        svg.AddText(times, new PointF(-350, -425));
+        times = $"To: {End:dd MMM yy HH:mm:ss} UTC";
+        svg.AddText(times, new PointF(-350, -400));
+        times = $"Interval: {TimeSpanStr(Interval)}";
+        svg.AddText(times, new PointF(-350, -375));
+
+        // Plot the compass points
+
         svg.AddText("N", new PointF(5, 25));
         svg.AddText("NE", new PointF(230, 25));
         svg.AddText("E", new PointF(455, 25));
@@ -51,7 +63,12 @@ public class SkyChart
         svg.AddText("NW", new PointF(-220, 25));
 
         for (int i = 0; i < BodyNames.Count; i++)
-            PlotKey(i, BodyNames[i], new PointF(-900 + 175 * (i % 10), 425 - (i / 10) * 50));
+        {
+            int colourIndex = CelestialBody.PlanetIndex(BodyNames[i]);
+            PlotKey(BodyNames[i], 
+                new PointF(-900 + 175 * (i % 10), 425 - (i / 10) * 50), 
+                colourIndex);
+        }
 
         // Now plot each planet's position
 
@@ -70,6 +87,29 @@ public class SkyChart
 
         svg.CalculateViewBox(new SizeF(20, 20));
         return svg.ToString();
+    }
+
+    private static string TimeSpanStr(TimeSpan ts)
+    {
+        string result = string.Empty;
+        if (ts >= TimeSpan.FromDays(1))
+        {
+            result += $"{ts.Days}d ";
+            ts -= TimeSpan.FromDays(ts.Days);
+        }
+        if (ts >= TimeSpan.FromHours(1))
+        {
+            result += $"{ts.Hours}h ";
+            ts -= TimeSpan.FromHours(ts.Hours);
+        }
+        if (ts >= TimeSpan.FromMinutes(1))
+        {
+            result += $"{ts.Minutes}m ";
+            ts -= TimeSpan.FromMinutes(ts.Minutes);
+        }
+        if(ts.Seconds > 0)
+            result += $"{ts.Seconds}s";
+        return result;
     }
 
     private int FarthestLast(BodyLocation near, BodyLocation far)
@@ -102,9 +142,9 @@ public class SkyChart
             "darkmagenta"
     };
 
-    void PlotKey(int itemNumber, string text, PointF location)
+    void PlotKey(string text, PointF location, int colour)
     {
-        svg.AddCircle(location, 10, "black", 1, bodyColours[itemNumber]);
+        svg.AddCircle(location, 10, "black", 1, bodyColours[colour]);
         svg.AddText(text, new PointF(location.X + 25, location.Y + 10));
     }
     void PlotBody(SVGCreator svg, BodyLocation loc, int colour)

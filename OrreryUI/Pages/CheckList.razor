@@ -18,13 +18,13 @@
             {  
                 Checked = true;  
             }  
-            <div class="col">
+            <div class="@ColClass()">
             <input type="checkbox" checked=@Checked  @onchange="eventArgs => { CheckboxClicked(Value, eventArgs.Value); }" />  
                     @Text </div>
             }  
             while((i++ % Columns) != 0)
             {
-                <div class="col"></div>
+                <div class="@ColClass()"></div>
             }
         }  
     </div>
@@ -43,6 +43,17 @@
     [Parameter] public List<string> SelectedValues { get; set; }  
     // The number of columns containing check boxes
     [Parameter] public int Columns { get; set; }
+    // Styling to apply to each checkbox cell
+    [Parameter] public string CheckClass { get; set; }
+    
+    private string ColClass()
+    {
+        if (string.IsNullOrWhiteSpace(CheckClass))
+            return "col";
+        else
+            return "col " + CheckClass;
+    }
+
     //Method to update the selected value on click on checkbox   
     public void CheckboxClicked(string aSelectedId, object aChecked)  
     {  
