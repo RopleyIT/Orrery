@@ -12,14 +12,11 @@
                 @rowSep
             }
             var Text = TextField?.Invoke(item);  
-            var Value = ValueField?.Invoke(item).ToString();  
-            bool Checked = false;  
-            if (SelectedValues.Contains(Value))  
-            {  
-                Checked = true;  
-            }  
+            var Value = ValueField?.Invoke(item).ToString();
+            bool Checked = Value != null && SelectedValues.Contains(Value);
             <div class="@ColClass()">
-            <input type="checkbox" checked=@Checked  @onchange="eventArgs => { CheckboxClicked(Value, eventArgs.Value); }" />  
+            <input type="checkbox" checked=@Checked  
+                @onchange="eventArgs => { CheckboxClicked(Value, eventArgs.Value); }" />  
                     @Text </div>
             }  
             while((i++ % Columns) != 0)

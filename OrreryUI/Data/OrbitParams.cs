@@ -8,21 +8,21 @@ namespace OrreryUI.Data
     {
         [Required]
         [Range(-90.0, 90.0, ErrorMessage = "Latitude must be between plus or minus 90 degrees")]
-        public double Latitude { get; set; }
+        public double Latitude { get; set; } = 56.4557482; // UoD Botanical Gardens
 
         [Required]
         [Range(-180.0, 180.0, ErrorMessage = "Longitude must be between plus or minus 180 degrees")]
-        public double Longitude { get; set; }
-       
-        [Required]
-        public DateTime Start { get; set; }
-      
-        [Required]
-        public DateTime End { get; set; }
+        public double Longitude { get; set; } = -3.0203067; // UoD Botanical Gardens
 
-        public string Interval { get; set; } 
+        [Required]
+        public DateTime Start { get; set; } = DateTime.Now;
 
-        public List<string> Bodies { get; set; }
+        [Required]
+        public DateTime End { get; set; } = DateTime.Now.AddMonths(12);
+
+        public string Interval { get; set; } = "week";
+
+        public List<string> Bodies { get; set; } = new() { "sun" };
 
         public string GetSkySvg(IEnumerable<string> planetNames)
         {
@@ -39,11 +39,13 @@ namespace OrreryUI.Data
                 _ => TimeSpan.FromDays(36525)
             };
 
-            SkyChart sc = new();
-            sc.Start = ConvertTime(Start);
-            sc.End = ConvertTime(End);
-            sc.Interval = interval;
-            sc.LongLat = new((float)Longitude, (float)Latitude);
+            SkyChart sc = new()
+            {
+                Start = ConvertTime(Start),
+                End = ConvertTime(End),
+                Interval = interval,
+                LongLat = new((float)Longitude, (float)Latitude)
+            };
             sc.BodyNames.Clear();
             sc.BodyNames.AddRange(planetNames);
             return sc.PlotSvg();
